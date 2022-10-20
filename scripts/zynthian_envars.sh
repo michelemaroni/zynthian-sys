@@ -29,7 +29,7 @@ export ZYNTHIAN_CUSTOM_CONFIG=""
 export ZYNTHIAN_OVERCLOCKING="None"
 export ZYNTHIAN_LIMIT_USB_SPEED="0"
 export ZYNTHIAN_DISABLE_OTG="0"
-export ZYNTHIAN_WIFI_MODE="off"
+export ZYNTHIAN_WIFI_MODE="hotspot"
 
 #Audio Config
 export SOUNDCARD_NAME="HifiBerry DAC+ ADC PRO"
@@ -135,14 +135,14 @@ else
 	fi
 fi
 
-if [ "$hw_architecture" = "armv7l" ]; then
+if [[ "$hw_architecture" = "armv7l" || "$hw_architecture" = "aarch64" ]]; then
 	# default is: RPi3
 	CPU="-mcpu=cortex-a53 -mtune=cortex-a53"
 	FPU="-mfpu=neon-fp-armv8 -mneon-for-64bits"
-	if [[ "$rbpi_version" =~ [2] ]]; then
-		CPU="-mcpu=cortex-a7 -mtune=cortex-a7"
-		FPU="-mfpu=neon-vfpv4"
-	fi
+	#if [[ "$rbpi_version" =~ [2] ]]; then
+	#	CPU="-mcpu=cortex-a7 -mtune=cortex-a7"
+	#	FPU="-mfpu=neon-vfpv4"
+	#fi
 	#CPU="${CPU} -Ofast" #Breaks mod-ttymidi build
 	FPU="${FPU} -mfloat-abi=hard -mlittle-endian -munaligned-access -mvectorize-with-neon-quad -ftree-vectorize"
 	CFLAGS_UNSAFE="-funsafe-loop-optimizations -funsafe-math-optimizations -ffast-math"
@@ -152,7 +152,7 @@ export RBPI_VERSION=$rbpi_version
 export CFLAGS="${CPU} ${FPU}"
 export CXXFLAGS=${CFLAGS}
 export CFLAGS_UNSAFE=""
-export RASPI=true
+export RASPI=false
 #echo "Hardware Architecture: ${hw_architecture}"
 #echo "Hardware Model: ${rbpi_version}"
 
