@@ -135,30 +135,18 @@ else
 	fi
 fi
 
-# Check the links below for more infos
-# https://gcc.gnu.org/onlinedocs/gcc/
-# https://maskray.me/blog/2022-08-28-march-mcpu-mtune
-case $hw_architecture in
-	"armv7l")
-		CPU="-mcpu=cortex-a7 -mtune=cortex-a7"
-		FPU="-mfpu=neon-vfpv4"
-		;;
-	"aarch64")
-		CPU="-mcpu=cortex-a53 -mtune=cortex-a53"
-		FPU="-mfpu=neon-fp-armv8 -mneon-for-64bits"
-		;;
-	"x86_64")
-		CPU="-mcpu=foo -mtune=bar"
-		FPU="-mfpu=baz"
-esac
+if [[ "$hw_architecture" = "armv7l" || "$hw_architecture" = "aarch64" ]]; then
+	# default is: RPi3
+	CPU="-mcpu=cortex-a53 -mtune=cortex-a53"
+	FPU="-mfpu=neon-fp-armv8 -mneon-for-64bits"
 	#if [[ "$rbpi_version" =~ [2] ]]; then
 	#	CPU="-mcpu=cortex-a7 -mtune=cortex-a7"
 	#	FPU="-mfpu=neon-vfpv4"
 	#fi
 	#CPU="${CPU} -Ofast" #Breaks mod-ttymidi build
-	#FPU="${FPU} -mfloat-abi=hard -mlittle-endian -munaligned-access -mvectorize-with-neon-quad -ftree-vectorize"
-	#CFLAGS_UNSAFE="-funsafe-loop-optimizations -funsafe-math-optimizations -ffast-math"
-
+	FPU="${FPU} -mfloat-abi=hard -mlittle-endian -munaligned-access -mvectorize-with-neon-quad -ftree-vectorize"
+	CFLAGS_UNSAFE="-funsafe-loop-optimizations -funsafe-math-optimizations -ffast-math"
+fi
 export MACHINE_HW_NAME=$hw_architecture
 export RBPI_VERSION=$rbpi_version
 export CFLAGS="${CPU} ${FPU}"
