@@ -94,6 +94,14 @@ if [ -z "$RASPI" ]; then
 		#CFLAGS="${CFLAGS} -mlittle-endian -munaligned-access -mvectorize-with-neon-quad -ftree-vectorize"
 		CFLAGS_UNSAFE="-funsafe-loop-optimizations -funsafe-math-optimizations -ffast-math"
 	fi
+
+	if [ "$rpbi_version" = "unknown" && "$(uname -m)"==*"x84_64"* ]; then
+		# x86_64	
+		CFLAGS="-march=native -mtune=native" #This is for local fresh installation
+		#CFLAGS="-march=x86-64" #Broadest compilation settings? Should -mtune=generic be specified?
+	fi
+
+
 	export MACHINE_HW_NAME=$hw_architecture
 	export RBPI_VERSION=$rbpi_version
 	export CXXFLAGS=${CFLAGS}
