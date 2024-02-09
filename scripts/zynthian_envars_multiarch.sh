@@ -74,13 +74,16 @@ if [ -z "$RASPI" ]; then
 
 	# Hardware Architecture & Optimization Options
 	hw_architecture=`uname -m 2>/dev/null`
-	if [ -e "/sys/firmware/devicetree/base/model" ]; then
+	hw_architecture_2="$(uname -m)"
+
+	if [ -e "/sys/firmware/devicetree/base/model" ]; then #Determine if executing on Raspberry Pi.
 		# This doesn't work!!
 		rbpi_version=`tr -d '\0' < /sys/firmware/devicetree/base/model`
 	else
 		rbpi_version="Unknown"
 	fi
 
+	# Set-up compilation flags for Raspberry Pi
 	if [ "$hw_architecture" = "armv7l" ]; then
 		# RPi3 (default)
 		CFLAGS="-mcpu=cortex-a53 -mfloat-abi=hard -mfpu=neon-fp-armv8 -mneon-for-64bits -mtune=cortex-a53"
@@ -95,10 +98,12 @@ if [ -z "$RASPI" ]; then
 		CFLAGS_UNSAFE="-funsafe-loop-optimizations -funsafe-math-optimizations -ffast-math"
 	fi
 
-	if [ "$rpbi_version" = "unknown" && "$(uname -m)"==*"x84_64"* ]; then
-		# x86_64	
-		CFLAGS="-march=native -mtune=native" #This is for local fresh installation
-		#CFLAGS="-march=x86-64" #Broadest compilation settings? Should -mtune=generic be specified?
+	# Set-up compilation flags for non-Raspberry Pi hardware
+	if [ "$rpbi_version" == "Unknown" ] || [ -z $rpbi_version ]; then
+		if [[ "$hw_architecture" =~ "x86_64" ]]; then
+			CFLAGS="-march=native -mtune=native" #This is for local fresh installation
+			#CFLAGS="-march=x86-64" #Broadest compilation settings? Should -mtune=generic be specified?
+		fi
 	fi
 
 
@@ -106,10 +111,11 @@ if [ -z "$RASPI" ]; then
 	export RBPI_VERSION=$rbpi_version
 	export CXXFLAGS=${CFLAGS}
 	export CFLAGS_UNSAFE=""
-	export RASPI="true"
+	#export RASPI="true"
 
 	echo "Hardware Architecture: ${hw_architecture}"
 	echo "Hardware Model: ${rbpi_version}"
+	echo "Compilation flags: ${CXXFLAGS}"
 
 fi
 
