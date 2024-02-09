@@ -1,0 +1,15 @@
+## Build Docker image, show output to console and store it to build.log
+
+docker build --no-cache --progress=plain . 2>&1 | tee build.log
+
+## Build and store output to build.log
+
+docker build --no-cache --progress=plain  . &> build.log
+
+## Delete all containers including its volumes use
+
+docker rm -vf $(docker ps -aq)
+
+## Delete all the images
+
+docker rmi -f $(docker images -aq)
