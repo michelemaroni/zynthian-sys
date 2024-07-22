@@ -38,9 +38,6 @@ touch ssh
 
 source "zynthian_envars_multiarch.sh"
 
-# ls -a
-# exit 1
-
 #------------------------------------------------
 # Set default config
 #------------------------------------------------
@@ -71,12 +68,16 @@ apt-get -y update --allow-releaseinfo-change
 apt-get -y full-upgrade
 
 # Install required dependencies if needed
-apt-get -y install apt-utils apt-transport-https rpi-update sudo software-properties-common parted dirmngr rpi-eeprom gpgv wget
+apt-get -y install apt-utils apt-transport-https sudo software-properties-common parted dirmngr gpgv wget # rpi-update rpi-eeprom # < RPi specific packages
+sudo apt install ca-certificates 
+# ^Fix Certificate verification failed: The certificate is NOT trusted. The certificate issuer is unknown.  Could not handshake: Error in the certificate verification.
 
 # Update Firmware
 if [ "$ZYNTHIAN_INCLUDE_RPI_UPDATE" == "yes" ]; then
     rpi-update
 fi
+
+#echo ""Break from script"" && exit 2
 
 #------------------------------------------------
 # Add Repositories
