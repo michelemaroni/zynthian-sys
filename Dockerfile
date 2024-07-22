@@ -1,9 +1,9 @@
-FROM debian:bullseye
+FROM debian:bookworm
 
 COPY . zynthian-sys
 
 #RUN echo "Hello world"
 #RUN ls -a zynthian-sys
-RUN cat zynthian-sys/scripts/zynthian_envars_multiarch.sh
-RUN cat zynthian-sys/scripts/setup_system_raspioslite_64bit_bullseye.sh
-
+#RUN source zynthian-sys/scripts/zynthian_envars_multiarch.sh
+WORKDIR "/zynthian-sys/scripts/"
+RUN bash setup_system_x86_64_bookworm.sh
