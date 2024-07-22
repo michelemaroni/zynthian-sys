@@ -50,6 +50,12 @@ fi
 # Fixing some paths & locations ...
 #------------------------------------------------------------------------------
 
+# Create audio data dir and soft-link capture as a subdir inside
+if [ ! -d "$ZYNTHIAN_MY_DATA_DIR/audio" ]; then
+	mkdir "$ZYNTHIAN_MY_DATA_DIR/audio"
+	ln -s "$ZYNTHIAN_MY_DATA_DIR/capture" "$ZYNTHIAN_MY_DATA_DIR/audio/capture"
+fi
+
 # Fix zynseq data directories
 if [ ! -d "$ZYNTHIAN_MY_DATA_DIR/zynseq" ]; then
 	mkdir "$ZYNTHIAN_MY_DATA_DIR/zynseq"
@@ -85,6 +91,8 @@ fi
 if [ ! -d "$ZYNTHIAN_MY_DATA_DIR/presets/zynaddsubfx/presets" ]; then
 	mkdir "$ZYNTHIAN_MY_DATA_DIR/presets/zynaddsubfx/presets"
 fi
+# Update presets from zynthian-data repository
+cp -nr $ZYNTHIAN_DATA_DIR/presets/zynaddsubfx/banks/* /usr/share/zynaddsubfx/banks
 
 # Fix/Setup MOD-UI pedalboards directory: create dirs & symlinks, copy pedalboards ...
 if [ -d "$ZYNTHIAN_MY_DATA_DIR/mod-pedalboards" ]; then

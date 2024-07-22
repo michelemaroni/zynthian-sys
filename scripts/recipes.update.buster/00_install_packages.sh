@@ -132,11 +132,42 @@ if is_python_module_installed.py ffmpeg-python; then
 	pip3 install ffmpeg-python
 fi
 
+# 2024-01-08: Install alsa-midi (chain_manager)
+if is_python_module_installed.py alsa-midi; then
+	pip3 install alsa-midi
+fi
+
+# 2024-01-08: Install python3-usb (chain_manager)
+res=`dpkg -s python3-usb 2>&1 | grep "Status:"`
+if [ "$res" != "Status: install ok installed" ]; then
+	aptpkgs="$aptpkgs python3-usb"
+fi
+
+# 2024-02-06: Install libgpiod-dev
+res=`dpkg -s libgpiod-dev 2>&1 | grep "Status:"`
+if [ "$res" != "Status: install ok installed" ]; then
+	aptpkgs="$aptpkgs libgpiod-dev gpiod"
+fi
+
+# 2024-02-17: Install Levenshtein (text distance)
+if is_python_module_installed.py Levenshtein; then
+	pip3 install --upgrade pip
+	pip3 install Levenshtein
+fi
+
+# 2024-02-22: Install riban's libsndfile-zyndev from zynthian repo
+res=`dpkg -s libsndfile-zyndev 2>&1 | grep "Status:"`
+if [ "$res" != "Status: install ok installed" ]; then
+	apt-get -y remove libsndfile1-dev
+	apt-get -y remove libsndfile1-zyndev
+	aptpkgs="$aptpkgs libsndfile-zyndev"
+fi
+
 # -----------------------------------------------------------------------------
 # Install/update recipes shouldn't be added below this line!
 # -----------------------------------------------------------------------------
 
-# Hold some packages
+# Unhold some packages
 apt-mark unhold raspberrypi-kernel
 apt-mark unhold raspberrypi-sys-mods
 

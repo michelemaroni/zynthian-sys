@@ -84,7 +84,10 @@ wget -O - https://deb.zynthian.org/deb-zynthian-org.gpg > /etc/apt/trusted.gpg.d
 echo "deb https://deb.zynthian.org/zynthian-stable buster main" > /etc/apt/sources.list.d/zynthian.list
 
 # Sfizz
-#TODO Find a deb aarch64 repository!
+#sfizz_url_base="https://download.opensuse.org/repositories/home:/sfztools:/sfizz/Raspbian_12"
+sfizz_url_base="https://download.opensuse.org/repositories/home:/sfztools:/sfizz/Raspbian_11"
+echo 'deb $sfizz_url_base/ /' | sudo tee /etc/apt/sources.list.d/home:sfztools:sfizz.list
+curl -fsSL $sfizz_url_base/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/home_sfztools_sfizz.gpg > /dev/null
 
 apt-get -y update
 apt-get -y full-upgrade
@@ -126,8 +129,9 @@ lv2-c++-tools libxi-dev libgtk2.0-dev libgtkmm-2.4-dev liblrdf-dev libboost-syst
 libzita-resampler-dev fonts-roboto libxcursor-dev libxinerama-dev mesa-common-dev libgl1-mesa-dev \
 libfreetype6-dev  libswscale-dev  qtbase5-dev qtdeclarative5-dev libcanberra-gtk-module '^libxcb.*-dev' \
 libcanberra-gtk3-module libxcb-cursor-dev libgtk-3-dev libxcb-util0-dev libxcb-keysyms1-dev libxcb-xkb-dev \
-libxkbcommon-x11-dev libssl-dev libmpg123-0 libmp3lame0 libqt5svg5-dev libxrender-dev \
-libavcodec58 libavformat58 libavutil56 libavresample4 libavformat-dev libavcodec-dev
+libxkbcommon-x11-dev libssl-dev libmpg123-0 libmp3lame0 libqt5svg5-dev libxrender-dev librubberband-dev \
+libavcodec58 libavformat58 libavutil56 libavresample4 libavformat-dev libavcodec-dev \
+libclthreads-dev libclxclient-dev
 
 # Tools
 apt-get -y --no-install-recommends install build-essential git swig pkg-config autoconf automake premake \
@@ -142,12 +146,12 @@ ruby rake xsltproc vorbis-tools zenity doxygen graphviz glslang-tools rubberband
 apt-get -y install python-is-python2 python-dev-is-python2 python-setuptools
 
 # Python3
-apt-get -y install python3 python3-dev python3-pip cython3 python3-cffi python3-tk python3-dbus python3-mpmath \
-python3-pil python3-pil.imagetk python3-setuptools python3-pyqt5 python3-numpy python3-evdev 2to3  \
-python3-soundfile librubberband-dev pyliblo-utils
+apt-get -y install python3 python3-dev python3-pip cython3 python3-cffi 2to3 python3-tk python3-dbus python3-mpmath \
+python3-pil python3-pil.imagetk python3-setuptools python3-pyqt5 python3-numpy python3-evdev python3-usb \
+python3-soundfile pyliblo-utils
 
 pip3 install --upgrade pip
-pip3 install tornado==4.5 tornadostreamform websocket-client jsonpickle oyaml JACK-Client sox \
+pip3 install tornado==4.5 tornadostreamform websocket-client jsonpickle oyaml JACK-Client alsa-midi sox \
 psutil pexpect requests meson ninja mido python-rtmidi==1.4.9 rpi_ws281x ffmpeg-python pyrubberband mutagen \
 abletonparsing
 
@@ -290,6 +294,8 @@ systemctl enable zynthian-config-on-boot
 echo "source $ZYNTHIAN_SYS_DIR/scripts/zynthian_envars_extended.sh > /dev/null 2>&1" >> /root/.bashrc
 # => Shell & Login Config
 echo "source $ZYNTHIAN_SYS_DIR/etc/profile.zynthian" >> /root/.profile
+# Disable bracketed paste for read-line library
+echo "set enable-bracketed-paste off" > /root/.inputrc
 
 # On first boot, resize SD partition, regenerate keys, etc.
 $ZYNTHIAN_SYS_DIR/scripts/set_first_boot.sh

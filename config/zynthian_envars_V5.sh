@@ -34,18 +34,18 @@ export ZYNTHIAN_WIFI_MODE="off"
 #Audio Config
 export SOUNDCARD_NAME="V5 ADAC"
 export SOUNDCARD_CONFIG="dtoverlay=hifiberry-dacplusadcpro\nforce_eeprom_read=0"
-export SOUNDCARD_MIXER="PGA Gain Left,PGA Gain Right,ADC Left Input,ADC Right Input,Digital Left,Digital Right,Headphone"
-export JACKD_OPTIONS="-P 70 -t 2000 -s -d alsa -d hw:sndrpihifiberry -S -r 44100 -p 256 -n 2 -X raw"
+export SOUNDCARD_MIXER="PGA_Gain_Left,PGA_Gain_Right,ADC_Left_Input,ADC_Right_Input,Digital_0,Digital_1,Headphone"
+export JACKD_OPTIONS="-P 70 -s -S -d alsa -d hw:sndrpihifiberry -r 48000 -p 256 -n 2 -X raw"
 export ZYNTHIAN_DISABLE_RBPI_AUDIO="0"
 export ZYNTHIAN_RBPI_HEADPHONES="0"
 
 #Display Config
 export DISPLAY_NAME="MIPI DSI 800x480 (inverted)"
-export DISPLAY_CONFIG="display_lcd_rotate=2\ndtoverlay=rpi-ft5406,touchscreen-inverted-x=1,touchscreen-inverted-y=1\n"
+export DISPLAY_CONFIG="display_lcd_rotate=2"
 export DISPLAY_WIDTH="800"
 export DISPLAY_HEIGHT="480"
 export FRAMEBUFFER="/dev/fb0"
-export DISPLAY_KERNEL_OPTIONS=""
+export DISPLAY_KERNEL_OPTIONS="video=DSI-1:800x480@60,rotate=180"
 
 # Zynthian Wiring Config
 export ZYNTHIAN_WIRING_LAYOUT="V5"
@@ -79,6 +79,7 @@ export ZYNTHIAN_MIDI_PLAY_LOOP="1"
 
 # MIDI system configuration
 export ZYNTHIAN_SCRIPT_MIDI_PROFILE="/zynthian/config/midi-profiles/default.sh"
+export ZYNTHIAN_USB_MIDI_BY_PORT="0"
 
 # Extra features
 export ZYNTHIAN_AUBIONOTES_OPTIONS="-O complex -t 0.5 -s -88  -p yinfft -l 0.5"
@@ -513,7 +514,6 @@ export ZYNTHIAN_WIRING_ZYNTOF03__MIDI_NUM="0"
 export ZYNTHIAN_WIRING_ZYNTOF04="NONE"
 export ZYNTHIAN_WIRING_ZYNTOF04__MIDI_CHAN="0"
 export ZYNTHIAN_WIRING_ZYNTOF04__MIDI_NUM="0"
-export zynthian_wiring_layout_saveas_fname=""
 
 # Directory Paths
 export ZYNTHIAN_DIR="/zynthian"

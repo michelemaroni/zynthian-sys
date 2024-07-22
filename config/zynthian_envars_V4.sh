@@ -34,8 +34,8 @@ export ZYNTHIAN_WIFI_MODE="off"
 #Audio Config
 export SOUNDCARD_NAME="HifiBerry DAC+ ADC PRO"
 export SOUNDCARD_CONFIG="dtoverlay=hifiberry-dacplusadcpro"
-export SOUNDCARD_MIXER="Digital Left,Digital Right,PGA Gain Left,PGA Gain Right,ADC Left Input,ADC Right Input"
-export JACKD_OPTIONS="-P 70 -t 2000 -s -d alsa -d hw:sndrpihifiberry -r 44100 -p 256 -n 2 -X raw"
+export SOUNDCARD_MIXER="PGA_Gain_Left,PGA_Gain_Right,ADC_Left_Input,ADC_Right_Input,Digital_0,Digital_1"
+export JACKD_OPTIONS="-P 70 -s -S -d alsa -d hw:sndrpihifiberry -r 48000 -p 256 -n 2 -X raw"
 
 #Display Config
 export DISPLAY_NAME="ZynScreen 3.5 (v1)"
@@ -76,6 +76,7 @@ export ZYNTHIAN_MIDI_PLAY_LOOP="0"
 
 # MIDI system configuration
 export ZYNTHIAN_SCRIPT_MIDI_PROFILE="/zynthian/config/midi-profiles/default.sh"
+export ZYNTHIAN_USB_MIDI_BY_PORT="0"
 
 # Extra features
 export ZYNTHIAN_AUBIONOTES_OPTIONS="-O complex -t 0.5 -s -88  -p yinfft -l 0.5"

@@ -75,27 +75,52 @@ if [ -z "$RASPI" ]; then
 	# Hardware Architecture & Optimization Options
 	hw_architecture=`uname -m 2>/dev/null`
 	if [ -e "/sys/firmware/devicetree/base/model" ]; then
-		# This doesn't work!!
+		# THIS MUST BE FIXED!!! IT DOESN'T WORK!
 		rbpi_version=`tr -d '\0' < /sys/firmware/devicetree/base/model`
 	else
 		rbpi_version="Unknown"
 	fi
 
 	if [ "$hw_architecture" = "armv7l" ]; then
-		# RPi3 (default)
+		# 32bits => RPi3 (default)
 		CFLAGS="-mcpu=cortex-a53 -mfloat-abi=hard -mfpu=neon-fp-armv8 -mneon-for-64bits -mtune=cortex-a53"
 		#CFLAGS="${CFLAGS} -mlittle-endian -munaligned-access -mvectorize-with-neon-quad -ftree-vectorize"
 		CFLAGS_UNSAFE="-funsafe-loop-optimizations -funsafe-math-optimizations -ffast-math"
-		#RPi2
+		#RPi2 => Not supported anymore!
 		#CFLAGS="-mcpu=cortex-a7 -mfloat-abi=hard -mfpu=neon-vfpv4 -mtune=cortex-a7"
 	elif [ "$hw_architecture" = "aarch64" ]; then
-		# RPi4
+		# 64 bits => RPi4
 		CFLAGS="-mcpu=cortex-a72 -mtune=cortex-a72"
 		#CFLAGS="${CFLAGS} -mlittle-endian -munaligned-access -mvectorize-with-neon-quad -ftree-vectorize"
 		CFLAGS_UNSAFE="-funsafe-loop-optimizations -funsafe-math-optimizations -ffast-math"
 	fi
+
+	rbpi_words=($rbpi_version)
+	rbpi_version_number=${rbpi_words[2]}
+
+	if [[ $rbpi_version_number == "5" ]]; then
+		gpio_chip_device="/dev/gpiochip4"
+		i2c_device="/dev/i2c-1"
+	elif [[ $rbpi_version_number == "4" ]]; then
+		gpio_chip_device="/dev/gpiochip0"
+		i2c_device="/dev/i2c-1"
+	elif [[ $rbpi_version_number == "3" ]]; then
+		gpio_chip_device="/dev/gpiochip0"
+		i2c_device="/dev/i2c-1"
+	elif [[ $rbpi_version_number == "2" ]]; then
+		gpio_chip_device="/dev/gpiochip0"
+		i2c_device="/dev/i2c-1"
+	else
+		rbpi_version_number="UNSUPPORTED"
+		gpio_chip_device="/dev/gpiochip0"
+		i2c_device="/dev/i2c-1"
+	fi
+
 	export MACHINE_HW_NAME=$hw_architecture
 	export RBPI_VERSION=$rbpi_version
+	export RBPI_VERSION_NUMBER=$rbpi_version_number
+	export GPIO_CHIP_DEVICE=$gpio_chip_device
+	export I2C_DEVICE=$i2c_device
 	export CXXFLAGS=${CFLAGS}
 	export CFLAGS_UNSAFE=""
 	export RASPI="true"
@@ -111,6 +136,12 @@ fi
 
 export DEBIAN_FRONTEND="noninteractive"
 export ZYNTHIAN_SETUP_APT_CLEAN="TRUE" # Set TRUE to clean /var/cache/apt during build, FALSE to leave alone
+
+#------------------------------------------------------------------------------
+# Enter python virtual environment
+#------------------------------------------------------------------------------
+
+source "$ZYNTHIAN_DIR/venv/bin/activate"
 
 #------------------------------------------------------------------------------
 
